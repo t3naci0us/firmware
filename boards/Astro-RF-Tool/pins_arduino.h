@@ -24,6 +24,12 @@
 static const uint8_t TX = 18;
 static const uint8_t RX = 17;
 
+// Default ESP32-S3 SPI pins
+static const uint8_t SS = 5;
+static const uint8_t MOSI = 11;
+static const uint8_t MISO = 13;
+static const uint8_t SCK = 12;
+
 #define SERIAL_RX 17
 #define SERIAL_TX 18
 
@@ -86,7 +92,7 @@ static const uint8_t SCL = 2;
  * 2 = inverted portrait
  * 3 = inverted landscape
  */
-#define ROTATION 1
+#define ROTATION 3
 
 #define USER_SETUP_LOADED 1
 
@@ -103,7 +109,7 @@ static const uint8_t SCL = 2;
  * ST7735_GREENTAB2
  * ST7735_GREENTAB3
  */
-#define ST7735_BLACKTAB 1
+#define ST7735_GREENTAB3 1
 
 #define TFT_WIDTH 128
 #define TFT_HEIGHT 160
