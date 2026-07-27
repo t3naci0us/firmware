@@ -109,10 +109,10 @@ static const uint8_t SCL = 2;
  * ST7735_GREENTAB2
  * ST7735_GREENTAB3
  */
-#define ST7735_GREENTAB3 1
+#define ST7735_BLACKTAB 1
 
-#define TFT_WIDTH 128
-#define TFT_HEIGHT 160
+#define TFT_WIDTH 320
+#define TFT_HEIGHT 240
 
 #define TFT_RGB_ORDER TFT_BGR
 
