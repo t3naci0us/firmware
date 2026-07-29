@@ -63,8 +63,8 @@ static const uint8_t SCL = 2;
 
 #define UP_BTN 39
 #define DW_BTN 40
-#define L_BTN 41
-#define R_BTN 42
+#define L_BTN 42
+#define R_BTN 41
 #define SEL_BTN 47
 
 #define BTN_ACT LOW
@@ -84,58 +84,29 @@ static const uint8_t SCL = 2;
    --------------------------------------------------------- */
 
 #define HAS_SCREEN 1
-
-/*
- * ROTATION may need changing after the first boot:
- * 0 = portrait
- * 1 = landscape
- * 2 = inverted portrait
- * 3 = inverted landscape
- */
-#define ROTATION 3
+#define ROTATION 1
+#define MINBRIGHT (uint8_t)1
 
 #define USER_SETUP_LOADED 1
 
-#define ST7735_DRIVER 1
+#define ILI9341_DRIVER
 
-/*
- * Try BLACKTAB first.
- *
- * If the image is displaced, corrupted or has incorrect
- * colours, change this to one of:
- *
- * ST7735_REDTAB
- * ST7735_GREENTAB
- * ST7735_GREENTAB2
- * ST7735_GREENTAB3
- */
-#define ST7735_BLACKTAB 1
-
-#define TFT_WIDTH 320
-#define TFT_HEIGHT 240
-
-#define TFT_RGB_ORDER TFT_BGR
+#define TFT_WIDTH 240
+#define TFT_HEIGHT 320
 
 #define TFT_MOSI 11
+#define TFT_MISO 13
 #define TFT_SCLK 12
 #define TFT_CS 10
 #define TFT_DC 9
 #define TFT_RST 14
 
-/*
- * The backlight is connected directly to 3.3V,
- * so no TFT_BL pin is defined.
- */
-
 #define TOUCH_CS -1
 
 #define SMOOTH_FONT 1
 
-/*
- * ST7735 displays are normally happier at 20–27 MHz.
- */
-#define SPI_FREQUENCY 20000000
-#define SPI_READ_FREQUENCY 10000000
+#define SPI_FREQUENCY 10000000
+#define SPI_READ_FREQUENCY 5000000
 #define SPI_TOUCH_FREQUENCY 2500000
 
 /* ---------------------------------------------------------
