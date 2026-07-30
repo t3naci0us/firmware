@@ -1,5 +1,7 @@
 #ifdef T_DISPLAY_S3
 #include "../lilygo-t-display-s3/pins_arduino.h"
+#elif defined(ASTRO_RF_TOOL)
+#include "../astro-rf-tool/pins_arduino.h"
 #elif T_EMBED_1101
 #include "../lilygo-t-embed-cc1101/pins_arduino.h"
 #elif T_EMBED
