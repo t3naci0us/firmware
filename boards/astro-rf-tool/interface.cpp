@@ -20,16 +20,21 @@ void _setBrightness(uint8_t value) {
 }
 
 void InputHandler() {
-    static unsigned long upPressStarted = 0;
-    static unsigned long lastButtonPress = 0;
-
-    static bool upWasPressed = false;
+    static bool rawUpState = false;
+    static bool stableUpState = false;
     static bool upLongPressTriggered = false;
 
-    const unsigned long now = millis();
-    const unsigned long UP_HOLD_TIME = 1000;
+    static unsigned long upStateChangedAt = 0;
+    static unsigned long upPressedAt = 0;
+    static unsigned long lastOtherButtonPress = 0;
 
-    const bool upPressed = digitalRead(UP_BTN) == BTN_ACT;
+    const unsigned long now = millis();
+
+    const unsigned long UP_HOLD_TIME = 1000;
+    const unsigned long DEBOUNCE_TIME = 40;
+    const unsigned long OTHER_BUTTON_DEBOUNCE = 150;
+
+    const bool currentRawUp = digitalRead(UP_BTN) == BTN_ACT;
 
     const bool downPressed = digitalRead(DW_BTN) == BTN_ACT;
 
@@ -40,18 +45,51 @@ void InputHandler() {
     const bool selectPressed = digitalRead(SEL_BTN) == BTN_ACT;
 
     /*
-     * UP button:
-     *
-     * Short tap = normal Up
-     * Long hold = Back / Escape
+     * Track raw changes on the Up button.
      */
-    if (upPressed && !upWasPressed) {
-        upWasPressed = true;
-        upLongPressTriggered = false;
-        upPressStarted = now;
+    if (currentRawUp != rawUpState) {
+        rawUpState = currentRawUp;
+        upStateChangedAt = now;
     }
 
-    if (upPressed && upWasPressed && !upLongPressTriggered && now - upPressStarted >= UP_HOLD_TIME) {
+    /*
+     * Accept the new Up state only after it has remained
+     * unchanged for the debounce period.
+     */
+    if (rawUpState != stableUpState && now - upStateChangedAt >= DEBOUNCE_TIME) {
+        stableUpState = rawUpState;
+
+        /*
+         * Confirmed press.
+         */
+        if (stableUpState) {
+            upPressedAt = now;
+            upLongPressTriggered = false;
+        }
+
+        /*
+         * Confirmed release.
+         *
+         * Generate normal Up only when no long press occurred.
+         */
+        else {
+            if (!upLongPressTriggered) {
+                if (!wakeUpScreen()) {
+                    UpPress = true;
+                    PrevPagePress = true;
+                    AnyKeyPress = true;
+                }
+            }
+
+            upLongPressTriggered = false;
+        }
+    }
+
+    /*
+     * Confirmed long hold:
+     * issue Escape once and do not issue Up on release.
+     */
+    if (stableUpState && !upLongPressTriggered && now - upPressedAt >= UP_HOLD_TIME) {
         if (!wakeUpScreen()) {
             EscPress = true;
             AnyKeyPress = true;
@@ -61,26 +99,9 @@ void InputHandler() {
     }
 
     /*
-     * Generate a normal Up press only when the button is
-     * released before reaching the long-hold time.
+     * Debounce remaining controls.
      */
-    if (!upPressed && upWasPressed) {
-        if (!upLongPressTriggered) {
-            if (!wakeUpScreen()) {
-                UpPress = true;
-                PrevPagePress = true;
-                AnyKeyPress = true;
-            }
-        }
-
-        upWasPressed = false;
-        upLongPressTriggered = false;
-    }
-
-    /*
-     * Debounce the remaining buttons.
-     */
-    if (now - lastButtonPress < 150) { return; }
+    if (now - lastOtherButtonPress < OTHER_BUTTON_DEBOUNCE) { return; }
 
     if (downPressed) {
         if (!wakeUpScreen()) {
@@ -89,7 +110,8 @@ void InputHandler() {
             AnyKeyPress = true;
         }
 
-        lastButtonPress = now;
+        lastOtherButtonPress = now;
+        return;
     }
 
     if (leftPressed) {
@@ -98,7 +120,8 @@ void InputHandler() {
             AnyKeyPress = true;
         }
 
-        lastButtonPress = now;
+        lastOtherButtonPress = now;
+        return;
     }
 
     if (rightPressed) {
@@ -107,7 +130,8 @@ void InputHandler() {
             AnyKeyPress = true;
         }
 
-        lastButtonPress = now;
+        lastOtherButtonPress = now;
+        return;
     }
 
     if (selectPressed) {
@@ -116,7 +140,8 @@ void InputHandler() {
             AnyKeyPress = true;
         }
 
-        lastButtonPress = now;
+        lastOtherButtonPress = now;
+        return;
     }
 }
 
