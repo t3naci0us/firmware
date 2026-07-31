@@ -55,10 +55,10 @@ static const uint8_t SCK = 12;
 
 #define HAS_5_BUTTONS
 
-#define UP_BTN 41
-#define DW_BTN 42
-#define L_BTN 40
-#define R_BTN 39
+#define UP_BTN 39
+#define DW_BTN 40
+#define L_BTN 41
+#define R_BTN 42
 #define SEL_BTN 47
 
 #define BTN_ACT LOW
