@@ -13,8 +13,8 @@
    Standard Arduino pins
    -------------------------------------------------- */
 
-static const uint8_t TX = 18;
-static const uint8_t RX = 17;
+static const uint8_t TX = 43;
+static const uint8_t RX = 44;
 
 static const uint8_t SDA = 1;
 static const uint8_t SCL = 2;
@@ -30,8 +30,8 @@ static const uint8_t SCK = 12;
 
 #define USB_as_HID 1
 
-#define SERIAL_TX 18
-#define SERIAL_RX 17
+#define SERIAL_TX 43
+#define SERIAL_RX 44
 
 #define BAD_TX SERIAL_TX
 #define BAD_RX SERIAL_RX
@@ -79,7 +79,8 @@ static const uint8_t SCK = 12;
 #define TFT_MOSI 11
 #define TFT_MISO 13
 #define TFT_SCLK 12
-
+#define TFT_RGB_ORDER TFT_BGR
+#define TFT_INVERSION_OFF
 #define TFT_CS 10
 #define TFT_DC 9
 #define TFT_RST 14
@@ -94,7 +95,7 @@ static const uint8_t SCK = 12;
 
 #define SMOOTH_FONT 1
 
-#define SPI_FREQUENCY 10000000
+#define SPI_FREQUENCY 40000000
 #define SPI_READ_FREQUENCY 5000000
 #define SPI_TOUCH_FREQUENCY 2500000
 
@@ -111,7 +112,7 @@ static const uint8_t SCK = 12;
    Storage disabled for first boot
    -------------------------------------------------- */
 
-/*#define SDCARD_CS -1
+// #define SDCARD_CS -1
 
 /* --------------------------------------------------
    Feature defaults

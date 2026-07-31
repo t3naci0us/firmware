@@ -20,9 +20,14 @@ void _setBrightness(uint8_t value) {
 }
 
 void InputHandler() {
-    static unsigned long lastPress = 0;
+    static unsigned long upPressStarted = 0;
+    static unsigned long lastButtonPress = 0;
 
-    if (millis() - lastPress < 150 && !LongPress) { return; }
+    static bool upWasPressed = false;
+    static bool upLongPressTriggered = false;
+
+    const unsigned long now = millis();
+    const unsigned long UP_HOLD_TIME = 1000;
 
     const bool upPressed = digitalRead(UP_BTN) == BTN_ACT;
 
@@ -34,37 +39,84 @@ void InputHandler() {
 
     const bool selectPressed = digitalRead(SEL_BTN) == BTN_ACT;
 
-    if (upPressed || downPressed || leftPressed || rightPressed || selectPressed) {
-        lastPress = millis();
+    /*
+     * UP button:
+     *
+     * Short tap = normal Up
+     * Long hold = Back / Escape
+     */
+    if (upPressed && !upWasPressed) {
+        upWasPressed = true;
+        upLongPressTriggered = false;
+        upPressStarted = now;
+    }
 
+    if (upPressed && upWasPressed && !upLongPressTriggered && now - upPressStarted >= UP_HOLD_TIME) {
         if (!wakeUpScreen()) {
+            EscPress = true;
             AnyKeyPress = true;
-        } else {
-            return;
         }
+
+        upLongPressTriggered = true;
     }
 
-    if (leftPressed) { PrevPress = true; }
+    /*
+     * Generate a normal Up press only when the button is
+     * released before reaching the long-hold time.
+     */
+    if (!upPressed && upWasPressed) {
+        if (!upLongPressTriggered) {
+            if (!wakeUpScreen()) {
+                UpPress = true;
+                PrevPagePress = true;
+                AnyKeyPress = true;
+            }
+        }
 
-    if (rightPressed) { NextPress = true; }
-
-    if (upPressed) {
-        UpPress = true;
-        PrevPagePress = true;
+        upWasPressed = false;
+        upLongPressTriggered = false;
     }
+
+    /*
+     * Debounce the remaining buttons.
+     */
+    if (now - lastButtonPress < 150) { return; }
 
     if (downPressed) {
-        DownPress = true;
-        NextPagePress = true;
+        if (!wakeUpScreen()) {
+            DownPress = true;
+            NextPagePress = true;
+            AnyKeyPress = true;
+        }
+
+        lastButtonPress = now;
     }
 
-    if (selectPressed) { SelPress = true; }
+    if (leftPressed) {
+        if (!wakeUpScreen()) {
+            PrevPress = true;
+            AnyKeyPress = true;
+        }
 
-    // Left + Right together acts as Back/Escape
-    if (leftPressed && rightPressed) {
-        EscPress = true;
-        PrevPress = false;
-        NextPress = false;
+        lastButtonPress = now;
+    }
+
+    if (rightPressed) {
+        if (!wakeUpScreen()) {
+            NextPress = true;
+            AnyKeyPress = true;
+        }
+
+        lastButtonPress = now;
+    }
+
+    if (selectPressed) {
+        if (!wakeUpScreen()) {
+            SelPress = true;
+            AnyKeyPress = true;
+        }
+
+        lastButtonPress = now;
     }
 }
 
