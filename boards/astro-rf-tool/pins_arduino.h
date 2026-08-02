@@ -36,9 +36,6 @@ static const uint8_t SCK = 12;
 #define BAD_TX SERIAL_TX
 #define BAD_RX SERIAL_RX
 
-#define GPS_SERIAL_TX SERIAL_TX
-#define GPS_SERIAL_RX SERIAL_RX
-
 /* --------------------------------------------------
    I2C
    -------------------------------------------------- */
@@ -55,10 +52,10 @@ static const uint8_t SCK = 12;
 
 #define HAS_5_BUTTONS
 
-#define UP_BTN 39
-#define DW_BTN 40
-#define L_BTN 41
-#define R_BTN 42
+#define UP_BTN 41
+#define DW_BTN 42
+#define L_BTN 40
+#define R_BTN 39
 #define SEL_BTN 47
 
 #define BTN_ACT LOW
@@ -100,7 +97,7 @@ static const uint8_t SCK = 12;
 #define SPI_TOUCH_FREQUENCY 2500000
 
 /* --------------------------------------------------
-   Default SPI module bus
+   Default SPI module bus - TFT - CC1101 - NRF24
    -------------------------------------------------- */
 
 #define SPI_SCK_PIN 12
@@ -109,10 +106,56 @@ static const uint8_t SCK = 12;
 #define SPI_SS_PIN 5
 
 /* --------------------------------------------------
-   Storage disabled for first boot
+   Passive buzzer
    -------------------------------------------------- */
 
-// #define SDCARD_CS -1
+#define BUZZ_PIN 38
+
+/* --------------------------------------------------
+   CC1101 sub-GHz radio
+   Shared SPI bus with TFT
+   -------------------------------------------------- */
+
+#define USE_CC1101_VIA_SPI
+
+#define CC1101_SS_PIN 5
+#define CC1101_GDO0_PIN 6
+#define CC1101_GDO2_PIN 7
+
+#define CC1101_SCK_PIN SPI_SCK_PIN
+#define CC1101_MOSI_PIN SPI_MOSI_PIN
+#define CC1101_MISO_PIN SPI_MISO_PIN
+
+/* --------------------------------------------------
+   NRF24L01 2.4 GHz radio
+   Shared SPI bus
+   -------------------------------------------------- */
+
+#define USE_NRF24_VIA_SPI
+
+#define NRF24_CE_PIN 16
+#define NRF24_SS_PIN 15
+
+#define NRF24_MOSI_PIN SPI_MOSI_PIN
+#define NRF24_SCK_PIN SPI_SCK_PIN
+#define NRF24_MISO_PIN SPI_MISO_PIN
+
+/* --------------------------------------------------
+   MicroSD card
+   Shared SPI bus
+   -------------------------------------------------- */
+
+#define SDCARD_CS 4
+#define SDCARD_SCK SPI_SCK_PIN
+#define SDCARD_MOSI SPI_MOSI_PIN
+#define SDCARD_MISO SPI_MISO_PIN
+
+/* --------------------------------------------------
+   NEO-6M GPS — dedicated UART
+   -------------------------------------------------- */
+
+#define GPS_SERIAL_RX 17 // Receives data from GPS TX
+#define GPS_SERIAL_TX 18 // Sends data to GPS RX
 
 /* --------------------------------------------------
    Feature defaults
