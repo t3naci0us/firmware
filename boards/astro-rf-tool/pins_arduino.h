@@ -82,7 +82,6 @@ static const uint8_t SCK = 12;
 #define TFT_DC 9
 #define TFT_RST 14
 
-#define TFT_BL 8
 #define TFT_BACKLIGHT_ON HIGH
 
 #define TOUCH_CS -1
@@ -104,6 +103,12 @@ static const uint8_t SCK = 12;
 #define SPI_MOSI_PIN 11
 #define SPI_MISO_PIN 13
 #define SPI_SS_PIN 5
+
+/* --------------------------------------------------
+   IR-Pins
+   -------------------------------------------------- */
+#define IR_TX_PIN 8
+#define IR_RX_PIN 21
 
 /* --------------------------------------------------
    Passive buzzer
